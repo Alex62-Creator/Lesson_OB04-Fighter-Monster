@@ -34,37 +34,96 @@
 # Монстр побежден!
 
 from abc import ABC, abstractmethod
+import random, time
 
+# Класс описывающий 1-го персонажа
 class Fighter():
-    def __init__(self, weapon: Weapon):
-        self.weapon = weapon
+    def __init__(self):
+        self.weapon = None                              # Текущее оружие персонажа
+        self.name = "Боец"                              # Имя персонажа
 
-    def changeWeapon(self, new_weapon):
+    def changeWeapon(self, new_weapon):                 # Смена оружия у персонажа
         self.weapon = new_weapon
+        print(f"Боец выбрал {self.weapon.name}")
 
+# Класс описывающий 2-го персонажа
 class Monster():
-    pass
+    def __init__(self):
+        self.weapon = None                              # Текущее оружие персонажа
+        self.name = "Монстр"                            # Имя персонажа
 
+    def changeWeapon(self, new_weapon):                 # Смена оружия у персонажа
+        self.weapon = new_weapon
+        print(f"Монстр выбрал {self.weapon.name}")
+
+# Абстрактный базовый класс для видов оружия
 class Weapon(ABC):
     @abstractmethod
-    def attack(self):
+    def attack(self):                                   # Абстрактная функция применения оружия
         pass
-
+# Производный класс вида оружия
 class Sword(Weapon):
-    print("Боец выбирает меч")
+    def __init__(self):
+        self.effect = 1                                 # Эффективность применения данного вида оружия
+        self.name = "меч"                               # Наименование данного вида оружия
 
-    def attack(self):
-        print("Боец наносит удар мечом")
+    def attack(self, person):                           # Переопределенная функция применения данного вида оружия
+        print(f"{person} наносит удар мечом")
 
+# Производный класс вида оружия
 class Bow(Weapon):
-    print("Боец выбирает лук")
+    def __init__(self):
+        self.effect = 2                                 # Эффективность применения данного вида оружия
+        self.name = "лук"                               # Наименование данного вида оружия
 
-    def attack(self):
-        print("Боец пускает стрелу из лука")
+    def attack(self, person):                           # Переопределенная функция применения данного вида оружия
+        print(f"{person} пускает стрелу из лука")
 
+# Производный класс вида оружия
+class Shield(Weapon):
+    def __init__(self):
+        self.effect = 1                                 # Эффективность применения данного вида оружия
+        self.name = "щит"                               # Наименование данного вида оружия
+
+    def attack(self, person):                           # Переопределенная функция применения данного вида оружия
+        print(f"{person} защищается щитом")
+
+# Производный класс вида оружия
 class Gun(Weapon):
-    print("Боец выбирает пищаль")
+    def __init__(self):
+        self.effect = 3                                 # Эффективность применения данного вида оружия
+        self.name = "пищаль"                            # Наименование данного вида оружия
 
-    def attack(self):
-        print("Боец стреляет из пищаль")
+    def attack(self, person):                           # Переопределенная функция применения данного вида оружия
+        print(f"{person} стреляет из пищали")
 
+# Реализация боя
+
+# Создание объектов персонажей
+fighter = Fighter()
+monster = Monster()
+
+weapon_list = [Sword(), Bow(), Shield(), Gun()]         # Создание списка видов оружия. При добавлении нового вида требует корректировки
+
+while True:                                             # Цикл схваток
+    # Выбор оружия для каждого персонажа
+    weapon_f = random.choice(weapon_list)
+    fighter.changeWeapon(weapon_f)
+    weapon_m = random.choice(weapon_list)
+    monster.changeWeapon(weapon_m)
+
+    # Применение оружия персонажами
+    weapon_f.attack(fighter.name)
+    weapon_m.attack(monster.name)
+
+    # Определение победителя по эффективности выбранного оружия
+    if weapon_f.effect > weapon_m.effect:
+        print("Монстр побеждён!!!")
+        break
+    elif weapon_f.effect < weapon_m.effect:
+        print("Увы, Монстр оказался сильнее.")
+        break
+    else:
+        print("Бой продолжается")
+
+    time.sleep(5)                                       # Задержка между схватками
